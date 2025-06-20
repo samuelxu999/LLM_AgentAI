@@ -1,0 +1,46 @@
+<html>
+   <head>
+      <title>{{ title }}</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+   </head>
+
+   <body>
+<!--       <h1>Welcome to Chatbot Demo</h1>
+      <h2>Current time on server is: {{ time }}</h2> -->
+
+      <header>
+       <div class="logo-container">
+         <div class="logo">
+           <img src="{{ url_for('static', filename='images/mtu_logo.png')}}" alt="MTU Logo" width="240" height="80">
+         </div>
+         <div class="logo">
+           <img src="{{ url_for('static', filename='images/cc_logo.png')}}" alt="CC Logo" width="120" height="80">
+         </div>
+         <div class="title">
+            <h2>Welcome to Chatbot Demo</h2>
+         </div>
+       </div>
+      </header>
+
+     <!-- Main Content Wrapper -->
+     <div class="main-wrapper">
+       <div class="container">
+           
+         <!-- Chat Box (Left) -->
+         <div class="chat-box" id="chat-box">
+           <div class="chat-container" id="chat-container">
+             <!-- Chat messages will be dynamically added here -->
+           </div>
+           <div class="input-container">
+             <input type="text" id="user-input" placeholder="User writes query here">
+             <button class="send-button" id="send-button">➤</button>
+           </div>
+         </div>
+
+       </div>
+     </div>
+
+    <script src="{{ url_for('static', filename='chatscript.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+   </body>
+</html>
