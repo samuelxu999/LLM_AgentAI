@@ -25,10 +25,13 @@ app = Flask(__name__)
 
 ## get return content from Azure OpenAI model
 async def get_completion(user_message):
-   message = {"role": "user", "content": user_message}
+   messages = [
+   {"role": "system", "content": "You are a helpful and knowledgeable assistant."},
+   {"role": "user", "content": user_message}
+   ]
    
    # Get response from AsyncClient.chat
-   response = await AsyncClient().chat(model='deepseek-llm', messages=[message])
+   response = await AsyncClient().chat(model='deepseek-llm', messages=messages)
 
    # return content as json format
    return response.message.content
@@ -63,5 +66,5 @@ def chat():
 
 # launch webservice 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=8080, debug=True) #Defining IP and port. (Host IP on network)
+   app.run(host='0.0.0.0', port=8000, debug=True) #Defining IP and port. (Host IP on network)
 
