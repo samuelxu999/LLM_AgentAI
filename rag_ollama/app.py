@@ -1,5 +1,5 @@
 import streamlit as st
-
+import asyncio
 from langchain.memory import ConversationBufferMemory
 
 from rag_agent import *
@@ -12,6 +12,7 @@ st.sidebar.header("Settings")
 MODEL = st.sidebar.selectbox("Choose a Model", ["qwen3:8b", "deepseek-r1:7b"], index=0)
 MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
+SSE_EEABLE = st.sidebar.checkbox("SSE Response")
 
 # ---- Session State Setup ---- #
 if "chat_history" not in st.session_state:
@@ -36,6 +37,13 @@ for msg in st.session_state.chat_history:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+# get stream response from llm
+async def get_stream_response(prompt):
+    # Retrieve relevant documents based on user query
+    response = rag_chain.invoke(prompt)
+    for char in response:
+        yield char
+        await asyncio.sleep(0.02)
 
 # ---- Trim Chat Memory ---- #
 def trim_memory():
@@ -48,16 +56,32 @@ if prompt := st.chat_input("Say something"):
 
     with st.chat_message("user"):
         st.markdown(prompt)
-
+    
+    ## trim history memory
     trim_memory()
 
     with st.chat_message("assistant"):
-        response_container = st.empty()
+        full_response=""
 
-        # Retrieve relevant documents based on user query
-        response = rag_chain.invoke(prompt)
+        if SSE_EEABLE:
+            response_container = st.empty()
 
-        response_container.markdown(response)
-        st.session_state.chat_history.append({"role": "assistant", "content": response})
+            stream_generator=get_stream_response(prompt)
 
+            with response_container:
+                # stream the reponse to Streamlit
+                for chunk in st.write_stream(stream_generator):
+                    full_response+=chunk    
+        else:
+            response_container = st.empty()
+
+            # Retrieve relevant documents based on user query
+            full_response = rag_chain.invoke(prompt)
+        
+            response_container.markdown(full_response)
+
+        ## add AI response to chat history     
+        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+
+        ## trim history memory
         trim_memory()
