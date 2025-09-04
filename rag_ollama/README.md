@@ -28,9 +28,15 @@ Pull and Run Qwen 3 with Ollama
 ollama pull qwen3:8b
 ```
 
-## Run the rag_agent demo case to add doc to vector database
+## Run the rag_agent: 0 - demo case; 1 - add doc to vector database
 ```bash
-python rag_agent.py
+python rag_agent.py -h // get help
+
+python rag_agent.py // run demo case
+
+python rag_agent.py --test_func 1 // run add_document(), use default: data/test_doc.pdf
+
+python rag_agent.py --test_func 1 --doc_folder df_book --doc_name chapter1.pdf //
 ```
 
 ## Run the Streamlit App to launch chatbot

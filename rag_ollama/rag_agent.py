@@ -1,5 +1,8 @@
 # rag_local.py
 import os
+import argparse
+import sys
+
 from dotenv import load_dotenv
 from langchain_community.document_loaders import PyPDFLoader
 
@@ -16,8 +19,8 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv() # Optional: Loads environment variables from.env file
 
-DATA_PATH = "data/"
-PDF_FILENAME = "test_doc.pdf" # Replace with your PDF filename
+DATA_PATH = "" # folder that save documents
+PDF_FILENAME = "" # PDF filename 
 
 def load_documents():
     """Loads documents from the specified data path."""
@@ -87,7 +90,7 @@ def create_rag_chain(vector_store, llm_model_name="qwen3:8b", context_window=819
     # Create the retriever
     retriever = vector_store.as_retriever(
         search_type="similarity", # Or "mmr"
-        search_kwargs={'k': 3} # Retrieve top 3 relevant chunks
+        search_kwargs={'k': 5} # Retrieve top 3 relevant chunks
     )
     print("Retriever initialized.")
 
@@ -162,7 +165,35 @@ def add_document():
     print("Attempting to index documents...")
     vector_store = index_documents(chunks, embedding_function)
 
+def define_and_get_arguments(args=sys.argv[1:]):
+	parser = argparse.ArgumentParser(
+	    description="Run test cases."
+	)
+
+	parser.add_argument("--test_func", type=int, default=0, 
+	                    help="Execute test function: \
+	                    0 - run demo case \
+	                    1 - import document (*.pdf)")
+
+	parser.add_argument("--doc_folder", type=str, default="data/", 
+	                    help="input token value (string)")
+
+	parser.add_argument("--doc_name", type=str, default="test_doc.pdf", 
+						help="Size (KB) of randome data for test.")
+
+	args = parser.parse_args(args=args)
+	return args
+
 # --- Main Execution ---
 if __name__ == "__main__":
-    # demo_case()
-    add_document()
+    args = define_and_get_arguments()
+        
+    DATA_PATH = args.doc_folder
+    PDF_FILENAME = args.doc_name
+
+    ## switch test cases
+    if(args.test_func==1):
+        add_document()
+    else:
+        demo_case()
+    

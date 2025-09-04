@@ -63,6 +63,7 @@ if prompt := st.chat_input("Say something"):
     with st.chat_message("assistant"):
         full_response=""
 
+        ## Output AI response based on SSE option checkbox.
         if SSE_EEABLE:
             response_container = st.empty()
 
