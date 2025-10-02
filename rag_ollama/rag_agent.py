@@ -43,7 +43,7 @@ def split_documents(documents):
     print(f"Split into {len(all_splits)} chunks")
     return all_splits
 
-def get_embedding_function(model_name="nomic-embed-text"):
+def get_embedding_function(model_name="nomic-embed-text:v1.5"):
     """Initializes the Ollama embedding function."""
     # Ensure Ollama server is running (ollama serve)
     embeddings = OllamaEmbeddings(model=model_name)
