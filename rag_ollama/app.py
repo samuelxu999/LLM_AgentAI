@@ -62,7 +62,7 @@ if prompt := st.chat_input("Say something"):
     trim_memory()
 
     with st.chat_message("assistant"):
-        full_response=""
+        answer=""
 
         ## Output AI response based on SSE option checkbox.
         if SSE_EEABLE:
@@ -73,7 +73,7 @@ if prompt := st.chat_input("Say something"):
             with response_container:
                 # stream the reponse to Streamlit
                 for chunk in st.write_stream(stream_generator):
-                    full_response+=chunk    
+                    answer+=chunk    
         else:
             response_container = st.empty()
 
