@@ -9,7 +9,7 @@ st.set_page_config(layout="wide")
 st.title("Local Chatbot-RAG")
 
 st.sidebar.header("Settings")
-MODEL = st.sidebar.selectbox("Choose a Model", ["qwen3:8b", "deepseek-r1:7b"], index=0)
+MODEL = st.sidebar.selectbox("Choose a Model", ["qwen3:8b", "deepseek-r1:8b"], index=0)
 MAX_HISTORY = st.sidebar.number_input("Max History", 1, 10, 2)
 CONTEXT_SIZE = st.sidebar.number_input("Context Size", 1024, 16384, 8192, step=1024)
 SSE_EEABLE = st.sidebar.checkbox("SSE Response")
@@ -41,7 +41,8 @@ for msg in st.session_state.chat_history:
 async def get_stream_response(prompt):
     # Retrieve relevant documents based on user query
     response = rag_chain.invoke(prompt)
-    for char in response:
+    answer = clean_output(response)
+    for char in answer:
         yield char
         await asyncio.sleep(0.02)
 
@@ -78,11 +79,13 @@ if prompt := st.chat_input("Say something"):
 
             # Retrieve relevant documents based on user query
             full_response = rag_chain.invoke(prompt)
+
+            answer = clean_output(full_response)
         
-            response_container.markdown(full_response)
+            response_container.markdown(answer)
 
         ## add AI response to chat history     
-        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+        st.session_state.chat_history.append({"role": "assistant", "content": answer})
 
         ## trim history memory
         trim_memory()

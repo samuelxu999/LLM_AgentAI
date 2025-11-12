@@ -20,6 +20,7 @@ from langchain_core.output_parsers import StrOutputParser
 load_dotenv() # Optional: Loads environment variables from.env file
 
 DATA_PATH = "" # folder that save documents
+# DATA_PATH = os.getenv("DOC_DIRECTORY")
 PDF_FILENAME = "" # PDF filename 
 
 def load_documents():
@@ -150,7 +151,7 @@ def demo_case():
     query_rag(rag_chain, query_question_2)
 
 def add_document():
-       # 1. Load Documents
+    # 1. Load Documents
     docs = load_documents()
 
     # 2. Split Documents
@@ -164,6 +165,18 @@ def add_document():
     # A more robust approach would check if indexing is needed.
     print("Attempting to index documents...")
     vector_store = index_documents(chunks, embedding_function)
+
+def clean_output(text: str) -> str:
+    print("MESSAGE" + text)
+    """Strip <think>...</think> blocks from model outputs."""
+    cleanarr = text.split(sep="</think>")
+    if len(cleanarr) < 2: #no think section
+        cleaned = cleanarr[0]
+    else:
+        cleaned = cleanarr[1]
+    # this method seems inconsistent
+    # cleaned = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+    return cleaned
 
 def define_and_get_arguments(args=sys.argv[1:]):
 	parser = argparse.ArgumentParser(
