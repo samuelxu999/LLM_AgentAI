@@ -12,7 +12,7 @@ speaker_design/
 ├── logo/
 │   ├── nsf_logo.png   # NSF logo (left corner of header)
 │   └── mtu_logo.png   # Michigan Tech logo (right corner of header)
-├── Speaker/           # Output folder for generated posters
+├── Speaker_poster/    # Output folder for generated posters
 │   └── rdmce_{Author Name}.pdf
 ├── make_poster.py     # Poster generation script
 └── skill.md           # Skill file to support poster generation task.
@@ -67,8 +67,8 @@ python make_poster.py
 
 ## Output
 
-- Save poster to: `Speaker/rdmce_{Author Name}.pdf`
-  - Example: `Speaker/rdmce_Samuel Xu.pdf`
+- Save poster to: `Speaker_poster/rdmce_{Author Name}.pdf`
+  - Example: `Speaker_poster/rdmce_Samuel Xu.pdf`
 
 ---
 
@@ -81,7 +81,7 @@ python make_poster.py
 | Affiliation lines | Not shown (removed from layout) |
 | Header label | Talk title + speaker name only (no "Civil Engineering Seminar") |
 | Logos | NSF left, Michigan Tech right, loaded from `logo/` folder |
-| Output filename | `rdmce_{Author Name}.pdf` in `Speaker/` folder |
+| Output filename | `rdmce_{Author Name}.pdf` in `Speaker_poster/` folder |
 
 ---
 
