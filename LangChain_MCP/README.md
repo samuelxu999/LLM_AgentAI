@@ -1,22 +1,70 @@
-# Langchain agent with mcp servers
+# LangChain Agent with MCP Servers
 
-A simple demo to show how to use langchain agent to run multiple mcp servers.
+A demo showing how to use a LangChain agent with multiple MCP (Model Context Protocol) servers — one running locally over `stdio` and one running remotely over HTTP.
 
-## Install uv.
+Reference: [LangChain MCP Adapters](https://reference.langchain.com/python/langchain-mcp-adapters)
 
-Ensure `uv` are ready on you local system.
+## Overview
 
-Here are official installation guideline:
+The agent (`main.py`) connects to two MCP servers simultaneously and routes tool calls accordingly:
 
-- uv: https://docs.astral.sh/uv/getting-started/installation/
+| Server | Transport | Tools |
+|--------|-----------|-------|
+| `math_server.py` | stdio (local process) | `add`, `multiply` |
+| `weather_server.py` | HTTP (`localhost:8000`) | weather lookup |
 
+The LLM backend is **OpenAI GPT-4.1** via `langchain[openai]`.
 
-## Run weather_server.py as a http mcp server
+## Prerequisites
+
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- An OpenAI API key
+
+## Project Structure
+
+```
+LangChain_MCP/
+├── main.py            # LangChain agent entry point
+├── math_server.py     # Local stdio MCP server (add, multiply)
+├── weather_server.py  # HTTP MCP server (weather lookup)
+├── pyproject.toml     # Project dependencies
+└── .env               # API keys (not committed)
+```
+
+## Configuration
+
+Create a `.env` file in this directory:
+
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+## Install Dependencies
+
+```bash
+uv sync
+```
+
+## Run
+
+### 1. Start the weather HTTP MCP server
+
 ```bash
 uv run weather_server.py
 ```
 
-## Run main.py to show demo case
+This starts the weather server on `http://localhost:8000/mcp`.
+
+### 2. Run the agent demo
+
+In a separate terminal:
+
 ```bash
 uv run main.py
 ```
+
+The agent will:
+1. Discover tools from both MCP servers
+2. Answer a math query using the local `math_server` (`(13 + 5) × 12`)
+3. Answer a weather query using the HTTP `weather_server` (weather in Houghton, MI)
