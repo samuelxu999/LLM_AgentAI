@@ -31,7 +31,7 @@ async def get_completion(user_message):
    ]
    
    # Get response from AsyncClient.chat
-   response = await AsyncClient().chat(model='deepseek-llm', messages=messages)
+   response = await AsyncClient().chat(model='deepseek-r1:8b', messages=messages)
 
    # return content as json format
    return response.message.content

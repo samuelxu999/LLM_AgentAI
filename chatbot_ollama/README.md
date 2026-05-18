@@ -1,46 +1,72 @@
-# Chatbot Demo
-This is a chatbot demo project by using Ollama. 
+# Chatbot using Flask and Ollama
 
+A demo project showing how to build a simple web-based chatbot using [Flask](https://flask.palletsprojects.com/) and a local [Ollama](https://ollama.com) model. The backend exposes a REST API that the browser-based chat UI calls in real time.
 
-## Ensure you have install ollama and deploy models
+## Prerequisites
 
+- [Ollama](https://ollama.com) running locally with the `deepseek-r1:8b` model pulled:
+  ```bash
+  ollama pull deepseek-r1:8b
+  ```
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/getting-started/installation/) (recommended) or `pip`
 
-You can run WebUI to manage ollama and models
+### Optional: manage Ollama models via Open WebUI
 
-```shell
-## Start open-webui docker instance
-docker run -d --rm --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui ghcr.io/open-webui/open-webui:main
+```bash
+## Start Open WebUI docker instance
+docker run -d --rm --network=host -v open-webui:/app/backend/data \
+  -e OLLAMA_BASE_URL=http://127.0.0.1:11434 \
+  --name open-webui ghcr.io/open-webui/open-webui:main
 
-## Check if open-webui is running
+## Check running containers
 docker container ps
 
-## stop open-webui docker instance
+## Stop Open WebUI
 docker container stop open-webui
 ```
 
+## Project structure
 
-## Prepare virtual envrionment for python development
-```shell
-## Create a venv target directory
-python3 -m venv demo_env
+```
+chatbot_ollama/
+├── main.py               # Flask app — routes and Ollama async client
+├── templates/
+│   └── chatbot.html      # Chat UI template
+├── static/
+│   ├── chatscript.js     # Frontend chat logic
+│   └── index.css         # Styles
+├── system.txt            # System prompt (optional)
+├── requirements.txt      # pip dependencies
+└── pyproject.toml        # uv/PEP 517 project config
+```
 
-## Activate the environment 
-source demo_env/bin/activate
+## Install dependencies
 
-## Deactivate the current environment 
-deactivate
-``` 
+**Using uv (recommended):**
+```bash
+uv sync
+```
 
-
-## Install requirements
-```shell
+**Using pip:**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-``` 
+```
 
-## Run chatbot webservice 
-```shell
+## Run the chatbot web service
+
+**Using uv:**
+```bash
+uv run main.py
+```
+
+**Using pip:**
+```bash
 python main.py
 ```
 
-## Open chatbot GUI page
-Input "http://127.0.0.1:8000" (or http://host_ip:8000) in address bar of webbrowser
+## Open the chatbot UI
+
+Open **http://127.0.0.1:8000** (or `http://<host_ip>:8000`) in a web browser and start chatting.
