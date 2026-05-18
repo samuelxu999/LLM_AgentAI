@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_core.messages import HumanMessage, AIMessage
-from agent import app
+from agent import agent_app
 
 st.set_page_config(page_title="Agent Ollama", page_icon="🤖")
 st.title("🤖 Agent Ollama")
@@ -24,7 +24,7 @@ if prompt := st.chat_input("Ask me anything — e.g. 'Any weather alerts in TX?'
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            result = app.invoke({"messages": st.session_state.messages})
+            result = agent_app.invoke({"messages": st.session_state.messages})
             reply = result["messages"][-1].content
         st.markdown(reply)
 
