@@ -26,6 +26,7 @@ workflow.add_conditional_edges(
     tools_condition,
 )
 workflow.add_edge("tools", "agent")
+workflow.add_edge("agent", END)
 
 # Compile
 agent_app = workflow.compile()
