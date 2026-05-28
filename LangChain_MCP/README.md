@@ -13,13 +13,18 @@ The agent (`main.py`) connects to two MCP servers simultaneously and routes tool
 | `math_server.py` | stdio (local process) | `add`, `multiply` |
 | `weather_server.py` | HTTP (`localhost:8000`) | weather lookup |
 
-The LLM backend is **OpenAI GPT-4.1** via `langchain[openai]`.
+Two LLM backends are supported and can be swapped in `main.py`:
+
+| Backend | Model | Variable |
+|---------|-------|----------|
+| OpenAI | `gpt-4.1` | `llm_openai` |
+| Azure OpenAI | `gpt-4o` (configurable) | `llm_azure` ← default |
 
 ## Prerequisites
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
-- An OpenAI API key
+- An OpenAI API key **or** an Azure OpenAI deployment
 
 ## Project Structure
 
@@ -34,10 +39,17 @@ LangChain_MCP/
 
 ## Configuration
 
-Create a `.env` file in this directory:
+Create a `.env` file in this directory with the keys for whichever backend(s) you use:
 
 ```env
+# OpenAI
 OPENAI_API_KEY=your_openai_api_key_here
+
+# Azure OpenAI
+AZURE_OPENAI_ENDPOINT=https://<your-resource>.api.cognitive.microsoft.com/
+AZURE_OPENAI_API_KEY=your_azure_api_key_here
+AZURE_OPENAI_DEPLOYMENT=gpt-4o
+AZURE_OPENAI_API_VERSION=2025-01-01-preview
 ```
 
 ## Install Dependencies
@@ -61,8 +73,17 @@ This starts the weather server on `http://localhost:8000/mcp`.
 In a separate terminal:
 
 ```bash
+# Azure OpenAI (default)
 uv run main.py
+
+# OpenAI
+uv run main.py --backend 1
 ```
+
+| `--backend` | LLM |
+|-------------|-----|
+| `0` | Azure OpenAI (default) |
+| `1` | OpenAI |
 
 The agent will:
 1. Discover tools from both MCP servers
