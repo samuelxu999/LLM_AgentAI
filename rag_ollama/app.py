@@ -1,6 +1,6 @@
 import streamlit as st
 import asyncio
-from langchain.memory import ConversationBufferMemory
+from langchain_classic.memory import ConversationBufferMemory
 
 from rag_agent import *
 
